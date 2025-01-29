@@ -6,8 +6,7 @@ name: Converter CI
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  
 
 jobs:
   build:
@@ -25,4 +24,16 @@ jobs:
         run: npm install
       - name: Run Jest tests
         run: npm test
+  docker: 
+    needs: build     runs-on: ubuntu-latest 
+  steps: 
+      -	name: Checkout code        
+        uses: actions/checkout@v3 
+      -	name: Log in to Docker Hub         
+        uses: docker/login-action@v3      
+        with:           username: ${{ secrets.DOCKER_USERNAME }}           
+        password: ${{ secrets.DOCKER_PASSWORD }} 
+      -	name: Build and push Docker image 
+        run: |           docker build -t srujana-converter:latest .           docker push srujana-converter:latest 
+
 
